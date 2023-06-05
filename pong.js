@@ -1,25 +1,17 @@
-function createCanvas() {
-  const canvas = document.createElement('canvas');
+let canvas;
+let ctx;
+
+function setup() {
+  canvas = document.createElement('canvas');
   document.body.appendChild(canvas);
-  return canvas;
+  ctx = canvas.getContext('2d');
 }
-
-function getContext(canvas) {
-  return canvas.getContext('2d');
-}
-
-let canvas = createCanvas();
-let ctx = getContext(canvas);
-
-let aiLevel = document.getElementById('aiLevel');
-let aiMax = document.getElementById('aiMax');
 
 // Define game objects
-let ball = { x: canvas.width / 2, y: canvas.height / 2, dx: 2, dy: 2 };
-let playerPaddle = { x: 0, y: canvas.height / 2, width: 10, height: 50 };
-let aiPaddle = { x: canvas.width - 10, y: canvas.height / 2, width: 10, height: 50 };
+let ball = { x: 0, y: 0, dx: 2, dy: 2 };
+let playerPaddle = { x: 0, y: 0, width: 10, height: 50 };
+let aiPaddle = { x: 0, y: 0, width: 10, height: 50 };
 
-// Game update function
 function update() {
   // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -34,24 +26,18 @@ function update() {
   }
 
   // Bounce the ball off the paddles
-  if (ball.x < playerPaddle.x + playerPaddle.width && ball.y > playerPaddle.y && ball.y < playerPaddle.y + playerPaddle.height) {
+  if (
+    ball.x < playerPaddle.x + playerPaddle.width &&
+    ball.y > playerPaddle.y &&
+    ball.y < playerPaddle.y + playerPaddle.height
+  ) {
     ball.dx *= -1;
-  } else if (ball.x > aiPaddle.x && ball.y > aiPaddle.y && ball.y < aiPaddle.y + aiPaddle.height) {
+  } else if (
+    ball.x > aiPaddle.x &&
+    ball.y > aiPaddle.y &&
+    ball.y < aiPaddle.y + aiPaddle.height
+  ) {
     ball.dx *= -1;
-  }
-
-  // Update the AI paddle position
-  // You would replace this with a call to your server-side AI logic
-  if (aiMax.checked) {
-    // If AI is set to max level, perfectly mirror the ball's movements
-    aiPaddle.y = ball.y - aiPaddle.height / 2;
-  } else {
-    // If AI is not at max level, make it move towards the ball at a speed based on the aiLevel setting
-    if (ball.y < aiPaddle.y) {
-      aiPaddle.y -= aiLevel.value;
-    } else if (ball.y > aiPaddle.y + aiPaddle.height) {
-      aiPaddle.y += aiLevel.value;
-    }
   }
 
   // Draw the ball and paddles
@@ -63,5 +49,5 @@ function update() {
   setTimeout(update, 20);
 }
 
-// Call the update function to start the game
+setup();
 update();
