@@ -1,5 +1,33 @@
-/* Placeholder for your CSS rules */
 body {
     background-color: #000;
     color: #fff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+#pongCanvas {
+    background-color: #222;
+    height: 600px;
+    width: 800px;
+}
+
+#controlPanel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#aiLevel {
+    margin: 0 10px;
+}
+
+#aiMax {
+    margin-left: 10px;
 }
