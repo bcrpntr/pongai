@@ -2,11 +2,15 @@
   "name": "pong-game",
   "version": "1.0.0",
   "description": "Pong Game",
+  "main": "pong.js",
   "scripts": {
     "start": "node pong.js",
     "test": "jest"
   },
+  "author": "Your Name",
+  "license": "MIT",
   "devDependencies": {
-    "jest": "^27.0.6"
+    "jest": "^27.2.3",
+    "jsdom": "^17.0.0"
   }
 }
