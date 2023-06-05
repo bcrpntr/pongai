@@ -40,6 +40,10 @@ function update() {
     ball.dx *= -1;
   }
 
+  // Update the AI paddle position using OpenAI logic
+  const aiMove = getAIMove();
+  aiPaddle.y = aiMove;
+
   // Draw the ball and paddles
   ctx.fillRect(ball.x, ball.y, 10, 10);
   ctx.fillRect(playerPaddle.x, playerPaddle.y, playerPaddle.width, playerPaddle.height);
@@ -47,6 +51,34 @@ function update() {
 
   // Call the update function again after a delay
   setTimeout(update, 20);
+}
+
+async function getAIMove() {
+  // Create the game state object
+  const gameState = {
+    ball: { x: ball.x, y: ball.y, dx: ball.dx, dy: ball.dy },
+    playerPaddle: { x: playerPaddle.x, y: playerPaddle.y, width: playerPaddle.width, height: playerPaddle.height },
+    aiPaddle: { x: aiPaddle.x, y: aiPaddle.y, width: aiPaddle.width, height: aiPaddle.height }
+  };
+
+  // Make API call to OpenAI using the environment variable for the API key
+  const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+    },
+    body: JSON.stringify({
+      prompt: JSON.stringify(gameState),
+      max_tokens: 1
+    })
+  });
+
+  // Parse the response and extract the AI's move
+  const data = await response.json();
+  const aiMove = data.choices[0].text;
+
+  return Number(aiMove); // Return the calculated move for the AI paddle as a number
 }
 
 setup();
