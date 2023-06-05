@@ -1,9 +1,10 @@
-const { getAIMove } = require('./pong');
+const { moveBall } = require('./pong');
 
 describe('Pong Game', () => {
-  test('AI should make a valid move', async () => {
-    const aiMove = await getAIMove();
-    expect(aiMove).toBeGreaterThanOrEqual(0);
-    expect(aiMove).toBeLessThanOrEqual(400);
+  test('Ball should move correctly', () => {
+    let ball = { x: 100, y: 100, dx: 2, dy: 2 };
+    moveBall(ball);
+    expect(ball.x).toBe(102);
+    expect(ball.y).toBe(102);
   });
 });
