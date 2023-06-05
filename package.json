@@ -1,0 +1,12 @@
+{
+  "name": "pong-ai",
+  "version": "1.0.0",
+  "description": "A Pong game with an AI opponent",
+  "main": "pong.js",
+  "scripts": {
+    "start": "node pong.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
