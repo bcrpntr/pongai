@@ -1,25 +1,26 @@
 const { update } = require('./pong');
+const { JSDOM } = require('jsdom');
 
-// Mock the canvas and context objects
-const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
+let canvas;
+let ctx;
+let ball;
+let playerPaddle;
+let aiPaddle;
 
-// Set up the initial game state
-const ball = { x: 100, y: 100, dx: 2, dy: 2 };
-const playerPaddle = { x: 0, y: 200, width: 10, height: 50 };
-const aiPaddle = { x: 290, y: 200, width: 10, height: 50 };
+beforeEach(() => {
+  const dom = new JSDOM('<!DOCTYPE html><html><body><canvas id="pongCanvas"></canvas></body></html>');
+  global.document = dom.window.document;
+  global.window = dom.window;
+
+  canvas = document.getElementById('pongCanvas');
+  ctx = canvas.getContext('2d');
+
+  ball = { x: 100, y: 100, dx: 2, dy: 2 };
+  playerPaddle = { x: 0, y: 200, width: 10, height: 50 };
+  aiPaddle = { x: 290, y: 200, width: 10, height: 50 };
+});
 
 describe('Pong Game', () => {
-  beforeEach(() => {
-    // Reset the game state before each test
-    ball.x = 100;
-    ball.y = 100;
-    ball.dx = 2;
-    ball.dy = 2;
-    playerPaddle.y = 200;
-    aiPaddle.y = 200;
-  });
-
   test('Ball should move correctly', () => {
     update(canvas, ctx, ball, playerPaddle, aiPaddle);
 
@@ -28,44 +29,54 @@ describe('Pong Game', () => {
   });
 
   test('Ball should bounce off top and bottom edges', () => {
-    // Set the ball's position near the top edge
     ball.y = 5;
     ball.dy = -2;
 
     update(canvas, ctx, ball, playerPaddle, aiPaddle);
 
-    expect(ball.dy).toBe(2); // The ball should bounce off the top edge and change its direction
+    expect(ball.dy).toBe(2);
   });
 
   test('Ball should bounce off player paddle', () => {
-    // Set the ball's position and direction to hit the player paddle
     ball.x = playerPaddle.x + playerPaddle.width - 2;
     ball.y = playerPaddle.y + playerPaddle.height / 2;
     ball.dx = -2;
 
     update(canvas, ctx, ball, playerPaddle, aiPaddle);
 
-    expect(ball.dx).toBe(2); // The ball should bounce off the player paddle and change its direction
+    expect(ball.dx).toBe(2);
   });
 
   test('Ball should bounce off AI paddle', () => {
-    // Set the ball's position and direction to hit the AI paddle
     ball.x = aiPaddle.x - 2;
     ball.y = aiPaddle.y + aiPaddle.height / 2;
     ball.dx = 2;
 
     update(canvas, ctx, ball, playerPaddle, aiPaddle);
 
-    expect(ball.dx).toBe(-2); // The ball should bounce off the AI paddle and change its direction
+    expect(ball.dx).toBe(-2);
   });
 
   test('AI paddle should move correctly towards the ball', () => {
-    // Set the ball's position to be above the AI paddle
     ball.x = aiPaddle.x - 10;
     ball.y = aiPaddle.y - 10;
 
     update(canvas, ctx, ball, playerPaddle, aiPaddle);
 
-    expect(aiPaddle.y).toBe(198); // The AI paddle should move upwards towards the ball
+    expect(aiPaddle.y).toBe(198);
   });
+
+  test('Game canvas should be cleared before each update', () => {
+    // Set a dummy value to the canvas to check if it's cleared
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    update(canvas, ctx, ball, playerPaddle, aiPaddle);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    const isCanvasCleared = imageData.every((value) => value === 0);
+
+    expect(isCanvasCleared).toBe(true);
+  });
+
+  // Add more tests as needed...
 });
