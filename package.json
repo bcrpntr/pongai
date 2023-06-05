@@ -14,9 +14,9 @@
     "testEnvironment": "node",
     "transform": {
       "^.+\\.js$": "babel-jest"
+    },
+    "babel": {
+      "presets": ["@babel/preset-env"]
     }
-  },
-  "babel": {
-    "presets": ["@babel/preset-env"]
   }
 }
